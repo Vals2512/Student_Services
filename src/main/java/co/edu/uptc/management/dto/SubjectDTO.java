@@ -16,10 +16,6 @@ public class SubjectDTO {
         this.numberCredits = numberCredits;
         this.codeStudent= codeStu;
     }
-    
-   
-    
-    
 
     public String getCodeSubject() {
 		return codeSubject;

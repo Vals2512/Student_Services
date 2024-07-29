@@ -1,11 +1,15 @@
 package co.edu.uptc.management.rest;
 
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -55,4 +59,28 @@ public class ManagementUser {
 		}
 		return !Objects.isNull(usuarioEncontrado);
 	}
+	
+	@POST
+	@Path("/createUser")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
+	public UserDTO createStudent(UserDTO userDTO) {
+	    
+	    List<UserDTO> users= userP.getListUserDTO();
+	    
+	    for (UserDTO user : users) {
+	        if (user.getNameUser().equals(userDTO.getNameUser())) {
+	            return null;
+	        }
+	    }
+	    if (users.add(userDTO)) {
+	        
+	        userP.dumpFilePlain("users.txt");
+	        return userDTO;
+	    }
+	    
+	    return null;
+	}
+	
+	
 }

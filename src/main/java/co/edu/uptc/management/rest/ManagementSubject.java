@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import co.edu.uptc.management.dto.StudentDTO;
 import co.edu.uptc.management.dto.SubjectDTO;
 import co.edu.uptc.management.persistence.SubjectPersistence;
  
@@ -23,6 +24,7 @@ import co.edu.uptc.management.persistence.SubjectPersistence;
 public class ManagementSubject {
 
 	public static SubjectPersistence subjectPersistence = new SubjectPersistence();
+	
 	
 	static {
 		
@@ -53,17 +55,34 @@ public class ManagementSubject {
 		}
 
 
-@POST
-@Path("/createSubject")
-@Produces ({MediaType.APPLICATION_JSON})
-@Consumes ({MediaType.APPLICATION_JSON})
-public SubjectDTO createSubejct (SubjectDTO subjectDTO) {
-	if(subjectPersistence.getListsubjectDTO().add(subjectDTO)) {
-		subjectPersistence.dumpFilePlain("subjects.txt");
-		return subjectDTO;
-	}
-	return null;
-}
+	   @POST
+	    @Path("/createSubject")
+	    @Produces({MediaType.APPLICATION_JSON})
+	    @Consumes({MediaType.APPLICATION_JSON})
+	   public SubjectDTO createSubject(SubjectDTO subjectDTO) {
+	        // Buscar estudiante por código
+	        StudentDTO student = null;
+	        for (StudentDTO s : ManagementStudent.studentPersistence.getListStudentsDTO()) {
+	            if (s.getCode().equals(subjectDTO.getCodeStudent())) {
+	                student = s;
+	                break;
+	            }
+	        }
+
+	        // Verificar si existe el estudiante
+	        if (student != null) {
+	            // Agregar la materia al estudiante
+	            if (subjectPersistence.getListsubjectDTO().add(subjectDTO)) {
+	                // Guardar la lista de materias en un archivo
+	                subjectPersistence.dumpFilePlain("subjects.txt");
+	                return subjectDTO;
+	            }
+	        }
+
+	        // Si no existe el estudiante, retornar null
+	        return null;
+	    }
+	
 
 @PUT
 @Path("/updateSubject")
@@ -114,6 +133,7 @@ public SubjectDTO updateSubjectAttribute (SubjectDTO subjectDTO) {
 			subjectPersistence.getListsubjectDTO().remove(subjectDTO);
 		}
 		subjectPersistence.dumpFilePlain("subjects.txt");
+		ManagementStudent.studentPersistence.dumpFilePlain("students.txt");
 		return subjectDTO;
 		}
 

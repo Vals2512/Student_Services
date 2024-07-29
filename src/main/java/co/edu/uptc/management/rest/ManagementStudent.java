@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import co.edu.uptc.management.dto.StudentDTO;
+import co.edu.uptc.management.dto.SubjectDTO;
 import co.edu.uptc.management.persistence.StudentPersistence;
 
 
@@ -22,16 +23,10 @@ import co.edu.uptc.management.persistence.StudentPersistence;
 @Path("/ManagementStudent")
 public class ManagementStudent {
 
-	
-		
 		public static StudentPersistence studentPersistence= new StudentPersistence();
 
-		 
-
 		static {
-			
 			studentPersistence.loadFilePlain("/data/students.txt");
-		
 		}
 		
 		@GET
@@ -55,14 +50,28 @@ public class ManagementStudent {
 		
 		@POST
 		@Path("/createStudent")
-		@Produces ({MediaType.APPLICATION_JSON})
-		@Consumes ({MediaType.APPLICATION_JSON})
-		public StudentDTO createStudent (StudentDTO studentDTO) {
-			if(studentPersistence.getListStudentsDTO().add(studentDTO)) {
-				studentPersistence.dumpFilePlain("students.txt");
-				return studentDTO;
-			}
-			return null;
+		@Produces({MediaType.APPLICATION_JSON})
+		@Consumes({MediaType.APPLICATION_JSON})
+		public StudentDTO createStudent(StudentDTO studentDTO) {
+		    // Obtener la lista de estudiantes
+		    List<StudentDTO> students = studentPersistence.getListStudentsDTO();
+		    
+		    // Verificar si el estudiante ya existe en la lista
+		    for (StudentDTO student : students) {
+		        if (student.getCode().equals(studentDTO.getCode())) {
+		            // Estudiante ya existe, retornar null
+		            return null;
+		        }
+		    }
+		    
+		    // Agregar el estudiante a la lista
+		    if (students.add(studentDTO)) {
+		        // Guardar la lista de estudiantes en un archivo
+		        studentPersistence.dumpFilePlain("students.txt");
+		        return studentDTO;
+		    }
+		    
+		    return null;
 		}
 		
 		@PUT
@@ -115,20 +124,42 @@ public class ManagementStudent {
 			return null;
 		}
 		
-		
 		@DELETE
 		@Path("/deleteStudent")
-		@Produces ({MediaType.APPLICATION_JSON})
-		@Consumes ({MediaType.APPLICATION_JSON})
-			public StudentDTO deleteStudent(@QueryParam("code") String codeStudent){
-				StudentDTO studentDTO = this.getStudentbyCode(codeStudent);
-				if(studentDTO != null) {
-					studentPersistence.getListStudentsDTO().remove(studentDTO);
-				}
-				studentPersistence.dumpFilePlain("students.txt");
-				return studentDTO;
-				}
-		
-		
-		
-	}
+		@Produces({MediaType.APPLICATION_JSON})
+		@Consumes({MediaType.APPLICATION_JSON})
+		public StudentDTO deleteStudent(@QueryParam("code") String codeStudent) {
+		    // Buscar estudiante por código
+		    StudentDTO studentDTO = this.getStudentbyCode(codeStudent);
+		    
+		    if (studentDTO != null) {
+		        // Eliminar el estudiante de la lista
+		        List<StudentDTO> students = studentPersistence.getListStudentsDTO();
+		        for (int i = 0; i < students.size(); i++) {
+		            if (students.get(i).getCode().equals(codeStudent)) {
+		                students.remove(i);
+		                break;
+		            }
+		        }
+
+		        // Eliminar las materias asociadas al estudiante
+		        List<SubjectDTO> subjects = ManagementSubject.subjectPersistence.getListsubjectDTO();
+		        for (int i = 0; i < subjects.size(); i++) {
+		            if (subjects.get(i).getCodeStudent().equals(codeStudent)) {
+		                subjects.remove(i);
+		                i--; 
+		            }
+		        }
+
+		        // Guardar la lista de estudiantes actualizada
+		        studentPersistence.dumpFilePlain("students.txt");
+
+		        // Guardar la lista de materias actualizada
+		        ManagementSubject.subjectPersistence.dumpFilePlain("subjects.txt");
+
+		        return studentDTO;
+		    }
+		    
+		    return null;
+		}
+}
