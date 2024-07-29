@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+
 import co.edu.uptc.management.dto.UserDTO;
 import co.edu.uptc.management.persistence.UserPersistence;
 import co.edu.uptc.management.utils.ManagementListUtils;
@@ -64,7 +65,7 @@ public class ManagementUser {
 	@Path("/createUser")
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON})
-	public UserDTO createStudent(UserDTO userDTO) {
+	public UserDTO createUser(UserDTO userDTO) {
 	    
 	    List<UserDTO> users= userP.getListUserDTO();
 	    
@@ -82,5 +83,29 @@ public class ManagementUser {
 	    return null;
 	}
 	
+	@GET
+	@Path("/getUserbyUserName")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public UserDTO getUserbyUserName(@QueryParam("nameUser") String nameUser){
+			for(UserDTO userDTO: userP.getListUserDTO()) {
+				if(userDTO.getNameUser().equals(nameUser)) {
+					return userDTO;
+				}
+			}
+			return null;
+		}
 	
+	@DELETE
+	@Path("/deleteUser")
+	@Produces ({MediaType.APPLICATION_JSON})
+	@Consumes ({MediaType.APPLICATION_JSON})
+		public UserDTO deleteUser(@QueryParam("nameUser") String nameUser){
+			UserDTO userDTO = this.getUserbyUserName(nameUser);
+			if(userDTO != null) {
+				userP.getListUserDTO().remove(userDTO);
+			}
+			userP.dumpFilePlain("users.txt");
+			
+			return userDTO;
+			}
 }
