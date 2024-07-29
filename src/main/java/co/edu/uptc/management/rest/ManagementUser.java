@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-
+import co.edu.uptc.management.dto.SubjectDTO;
 import co.edu.uptc.management.dto.UserDTO;
 import co.edu.uptc.management.persistence.UserPersistence;
 import co.edu.uptc.management.utils.ManagementListUtils;
@@ -95,6 +95,8 @@ public class ManagementUser {
 			return null;
 		}
 	
+	
+	
 	@DELETE
 	@Path("/deleteUser")
 	@Produces ({MediaType.APPLICATION_JSON})
@@ -108,4 +110,12 @@ public class ManagementUser {
 			
 			return userDTO;
 			}
+	
+	
+	@GET
+	@Path("/getUsers")
+	@Produces( { MediaType.APPLICATION_JSON } )
+	public List<UserDTO> getSubjects(){
+		return userP.getListUserDTO();
+	}
 }
