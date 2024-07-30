@@ -58,7 +58,7 @@ public class ManagementStudent {
 		    
 		    // Verificar si el estudiante ya existe en la lista
 		    for (StudentDTO student : students) {
-		        if (student.getCode().equals(studentDTO.getCode())) {
+		        if (student.getCode().equals(studentDTO.getCode()) && student.getId().equals(studentDTO.getId()) ) {
 		            // Estudiante ya existe, retornar null
 		            return null;
 		        }
@@ -125,7 +125,7 @@ public class ManagementStudent {
 		}
 		
 		@DELETE
-		@Path("/deleteStudent")
+		@Path("/deleteStudentByCode")
 		@Produces({MediaType.APPLICATION_JSON})
 		@Consumes({MediaType.APPLICATION_JSON})
 		public StudentDTO deleteStudent(@QueryParam("code") String codeStudent) {

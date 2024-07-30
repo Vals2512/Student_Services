@@ -68,6 +68,12 @@ public class ManagementSubject {
 	                break;
 	            }
 	        }
+	        
+	        for (SubjectDTO subject : getSubjects()) {
+		        if (subject.getCodeSubject().equals(subjectDTO.getCodeSubject() )) {
+		 	            return null;
+		        }
+		    }
 
 	        // Verificar si existe el estudiante
 	        if (student != null) {
@@ -78,6 +84,8 @@ public class ManagementSubject {
 	                return subjectDTO;
 	            }
 	        }
+	        
+	       
 
 	        // Si no existe el estudiante, retornar null
 	        return null;
