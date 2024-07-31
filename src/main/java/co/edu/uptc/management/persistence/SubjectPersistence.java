@@ -15,7 +15,7 @@ private List<SubjectDTO> listsubjectDTO = new ArrayList<>();
 		List<String> records = new ArrayList<>();
 		 for(SubjectDTO subjectDTO : listsubjectDTO){
 			 StringBuilder contentBorrow = new StringBuilder();
-			 contentBorrow.append(subjectDTO.getCodeStudent()).append(CommonConstants.SEMI_COLON);
+			 contentBorrow.append(subjectDTO.getCodeSubject()).append(CommonConstants.SEMI_COLON);
 			 contentBorrow.append(subjectDTO.getName()).append(CommonConstants.SEMI_COLON);
 			 contentBorrow.append(subjectDTO.getNumberCredits()).append(CommonConstants.SEMI_COLON);
 			 contentBorrow.append(subjectDTO.getCodeStudent());
