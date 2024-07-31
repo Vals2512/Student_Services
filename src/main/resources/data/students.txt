@@ -1,3 +1,4 @@
-3;Eimy;Ricaurte;3;systems;eimy.ricaurte
-4;Bibian;Corredor;4;civil;bibian.corredor
-5;Estefania;Rojas;5;industrial;estefania.rojas
+1;Laura;Benitez;1;civil;laura.benitez
+2;Julian;Vargas;2;electronica;julian.vargas
+3;Sofia;Henao;3;arquitectura;sofia.henao
+4;Valentina;Vega;4;systems;valentina.vega

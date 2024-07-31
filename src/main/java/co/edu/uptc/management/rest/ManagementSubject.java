@@ -69,7 +69,7 @@ public class ManagementSubject {
 	            }
 	        }
 	        
-	        for (SubjectDTO subject : getSubjects()) {
+	        for (SubjectDTO subject : subjectPersistence.getListsubjectDTO()) {
 		        if (subject.getCodeSubject().equals(subjectDTO.getCodeSubject() )) {
 		 	            return null;
 		        }
